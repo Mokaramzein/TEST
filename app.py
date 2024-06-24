@@ -16,7 +16,7 @@ def execute():
     except Exception as e:
         output = str(e)
     
-    return render_template_string(open('index.html').read(), output=output)
+    return render_template('index_client.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
