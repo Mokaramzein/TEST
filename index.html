@@ -5,6 +5,13 @@
 </head>
 <body>
   <h1>Run PowerShell Command</h1>
-  <script src="script.js"></script>
+  <button onclick="runCommand()">Run Command</button>
+  <script>
+    function runCommand() {
+      fetch('/run_command')
+        .then(response => response.text())
+        .then(data => console.log(data));
+    }
+  </script>
 </body>
 </html>
