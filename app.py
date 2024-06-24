@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index_client.html')
+    return render_template('index.html')
 
 @app.route('/execute', methods=['POST'])
 def execute():
@@ -16,7 +16,7 @@ def execute():
     except Exception as e:
         output = str(e)
     
-    return render_template('index_client.html')
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
