@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template_string(open('index.html').read())
+    return render_template('index_client.html')
 
 @app.route('/execute', methods=['POST'])
 def execute():
