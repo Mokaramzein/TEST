@@ -261,5 +261,5 @@ if __name__ == '__main__':
     try:
         port = int(argv[1])
     except Exception:
-        port = 8080
-    app.run(port=port, debug=False, host="0.0.0.0")
+        
+    app.run()
