@@ -256,10 +256,6 @@ def execute():
     
     return render_template('index.html', output=output)
 
+
 if __name__ == '__main__':
-    from sys import argv
-    try:
-        port = int(argv[1])
-    except Exception:
-        
-    app.run()
+    app.run(debug=True)
